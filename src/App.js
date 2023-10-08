@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import Main from './pages/Main';
+import About from './pages/About';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Registration from './pages/Registration';
+import Rules from './pages/Rules';
+import Test from './pages/test/Test';
+import Admin from './pages/Admin';
+// import AdminTest from './pages/AdminTest';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className='flex flex-col justify-between h-screen'>
+      <section className="w-10/12 mx-auto">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/rules" element={<Rules />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/admin" element={<Admin />} />
+          {/* <Route path="/adminTest" element={<AdminTest />} /> */}
+        </Routes>
+      </section>
+      <Footer />
+    </main>
   );
 }
 
