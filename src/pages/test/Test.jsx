@@ -61,19 +61,19 @@ const Test = ({ correctCount, setCorrectCount }) => {
     let color = '';
     if (totalCount < 50) {
       comparison = 'Қониқарсиз';
-      color = 'red1';
+      color = 'text-red-500';
     } else if (totalCount <= 80) {
       comparison = 'Қониқарли';
-      color = 'blue1';
+      color = 'text-blue-500';
     } else {
       comparison = 'Мукаммал';
-      color = 'green1';
+      color = 'text-green-500';
     }
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50">
         <div className="bg-primary2 w-10/12 p-8 rounded shadow-lg flex flex-col items-center">
           <h2 className="text-xl font-semibold mb-4 text-center">
-            Тест натижаси <span className={`text-${color}`}>{comparison}</span>
+            Тест натижаси <span className={color}>{comparison}</span>
           </h2>
           <p className="text-left w-full">Умумий тўпланган балл : {totalCount}</p>
           <p className="text-left w-full">Тўғри жавоблар сони : {correctCount}</p>
