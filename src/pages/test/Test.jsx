@@ -143,7 +143,7 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
                       {question.options.map((option, optionIndex) => (
                         <li className="flex gap-2 items-center w-full" key={optionIndex}>
                           <input
-                            className="accent-primary w-[15%] "
+                            className="accent-primary w-[10%] "
                             type="radio"
                             value={option}
                             id={option + optionIndex}
@@ -154,7 +154,7 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
                               handleAnswerSelect(index + (currentPage - 1) * TestsPerPage, option)
                             }
                           />
-                          <label className="cursor-pointer w-2/3 text-left " htmlFor={option + optionIndex}>
+                          <label className="cursor-pointer w-[80%] text-left " htmlFor={option + optionIndex}>
                             {option}
                           </label>
                         </li>
