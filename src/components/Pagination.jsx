@@ -1,37 +1,64 @@
-// DataComponent.js
 import React, { useState } from 'react';
-import ReactPaginate from 'react-paginate';
 
-const DataComponent = ({ data }) => {
-  const [currentPage, setCurrentPage] = useState(0);
+const Pagination = ({ tests }) => {
   const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const offset = currentPage * itemsPerPage;
-  const currentData = data.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(tests.length / itemsPerPage);
 
-  const handlePageClick = (data) => {
-    setCurrentPage(data.selected);
+  const handlePrevClick = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
   };
+
+  const handleNextClick = () => {
+    if (currentPage < pageCount - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 0; i < pageCount; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={currentPage === i ? 'active' : ''}>
+          {i + 1}
+        </button>,
+      );
+    }
+    return pageNumbers;
+  };
+
+  // const startIndex = currentPage * itemsPerPage;
+  // const endIndex = startIndex + itemsPerPage;
+  // const currentData = tests.slice(startIndex, endIndex);
 
   return (
     <div>
-      {currentData.map((item) => (
-        <div key={item.id}>{item.name}</div>
-      ))}
-      <ReactPaginate
-        previousLabel={'previous'}
-        nextLabel={'next'}
-        breakLabel={'...'}
-        pageCount={Math.ceil(data.length / itemsPerPage)}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageClick}
-        containerClassName={'pagination'}
-        subContainerClassName={'pages pagination'}
-        activeClassName={'active'}
-      />
+      {/* <h1>Pagination Example</h1>
+      {currentData.map((item, index) => (
+        <div key={index} className="card">
+          <h2>{item.title}</h2>
+          <p>{item.question}</p>
+          <p>{item.id}</p>
+        </div>
+      ))} */}
+
+      <div className="pagination flex gap-5">
+        <button onClick={handlePrevClick} disabled={currentPage === 0}>
+          Previous
+        </button>
+        {renderPageNumbers()}
+        <button onClick={handleNextClick} disabled={currentPage === pageCount - 1}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };
 
-export default DataComponent;
+export default Pagination;

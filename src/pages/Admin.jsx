@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import { useEffect } from 'react';
 
 function Admin() {
-  const api = 'https://utaxtest-f415251dfaac.herokuapp.com/create_test_with_questions';
+  const api = 'https://utax-777597cb6d80.herokuapp.com/add_question';
   const [formData, setFormData] = useState({
     test_title: '',
     questions: [],
@@ -50,13 +50,14 @@ function Admin() {
         options: ['', '', '', ''],
       });
     }
-    console.log(formData);
     fetch(api, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        formData
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
