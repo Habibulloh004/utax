@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useEffect } from 'react';
 
-const Reg = () => {
+const MyForm = () => {
   const [formData, setFormData] = useState({
     name: '',
-    surname: '',
+    comment: '',
     phone: '',
   });
-  const api = 'https://utax-777597cb6d80.herokuapp.com/create_user'
+  const [responseText, setResponseText] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,77 +16,62 @@ const Reg = () => {
     });
   };
 
-  //   useEffect(() => {
-  //     fetch('https://example.com/api/endpoint', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(formData),
-  //       })
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //           console.log('Success:', data);
-  //           // Handle success (if needed)
-  //         })
-  //         .catch((error) => {
-  //           console.error('Error:', error);
-  //           // Handle error (if needed)
-  //         });
-  //   }, [])
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
-    fetch(api, {
+    const url = 'https://utax-method-1fe234057bee.herokuapp.com/request';
+
+    const bodyFormData = new FormData();
+    bodyFormData.append('name', formData.name);
+    bodyFormData.append('comment', formData.comment);
+    bodyFormData.append('phone', formData.phone);
+
+    fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(
-        formData
-      ),
+      body: bodyFormData,
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw new Error('HTTP Error: ' + response.status);
+        }
+      })
       .then((data) => {
-        console.log('Success:', data);
-        // Handle success (if needed)
+        setResponseText('Request successful! Response: ' + data);
       })
       .catch((error) => {
-        console.error('Error:', error);
-        // Handle error (if needed)
+        setResponseText('An error occurred: ' + error.message);
       });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-slate-600 flex flex-col items-center gap-5 p-9">
-      <div>
-        <label>
-          Name:
-          <input type="text" name="name" value={formData.name} onChange={handleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Surname:
-          <input type="text" name="surname" value={formData.surname} onChange={handleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Phone Number:
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>
+            Name:
+            <input type="text" name="name" value={formData.name} onChange={handleChange} />
+          </label>
+        </div>
+        <div>
+          <label>
+            Comment:
+            <input type="text" name="comment" value={formData.comment} onChange={handleChange} />
+          </label>
+        </div>
+        <div>
+          <label>
+            Phone:
+            <input type="text" name="phone" value={formData.phone} onChange={handleChange} />
+          </label>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+
+      <div id="response">{responseText}</div>
+    </div>
   );
 };
 
-export default Reg;
+export default MyForm;

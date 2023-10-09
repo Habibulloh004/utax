@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { MyContext } from '../../MyContext';
 import { img } from '../../png';
 import Timer from './Timer';
 
-const Test = ({correctCount, setCorrectCount, userData}) => {
+const Test = ({ correctCount, setCorrectCount }) => {
+  const { userData, setUserData } = useContext(MyContext);
   const { next, prev } = img;
   const [currentPage, setCurrentPage] = useState(1);
   const [userAnswers, setUserAnswers] = useState([]);
@@ -13,7 +15,7 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
   const [data, setData] = useState([]);
   const TestsPerPage = 10;
   const api = 'https://utax-777597cb6d80.herokuapp.com/get_questions';
-
+  const addQuestion = 'https://utax-777597cb6d80.herokuapp.com/add_question';
   const handleAnswerSelect = (questionIndex, option) => {
     const updatedAnswers = [...userAnswers];
     updatedAnswers[questionIndex] = option;
@@ -59,19 +61,19 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
     let color = '';
     if (totalCount < 50) {
       comparison = 'Қониқарсиз';
-      color = '#DB2929';
+      color = 'red1';
     } else if (totalCount <= 80) {
       comparison = 'Қониқарли';
-      color = '#2D2AD6';
+      color = 'blue1';
     } else {
       comparison = 'Мукаммал';
-      color = '#00A907';
+      color = 'green1';
     }
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50">
         <div className="bg-primary2 w-10/12 p-8 rounded shadow-lg flex flex-col items-center">
           <h2 className="text-xl font-semibold mb-4 text-center">
-            Тест натижаси <span className={`text-[${color}]`}>{comparison}</span>
+            Тест натижаси <span className={`text-${color}`}>{comparison}</span>
           </h2>
           <p className="text-left w-full">Умумий тўпланган балл : {totalCount}</p>
           <p className="text-left w-full">Тўғри жавоблар сони : {correctCount}</p>
@@ -85,13 +87,39 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
       </div>
     );
   }
-  if (handleSubmit) {
-    const exportObj = {
-      ...userData, count: correctCount
-    }
-    localStorage.setItem('obj', JSON.stringify(exportObj));
-  }
-  
+  const saveResult = () => {
+    const localData = JSON.parse(localStorage.getItem('localObj'));
+    setOpen(!open);
+    setResOpen(!resOpen);
+    const newData = {
+      ...localData,
+      comment: String('correctAnswer' + correctCount + ' ' + 'totalScore' + correctCount * 2),
+    };
+    const url = 'https://utax-method-1fe234057bee.herokuapp.com/request';
+    const bodyFormData = new FormData();
+    bodyFormData.append('name', newData.name);
+    bodyFormData.append('comment', newData.comment);
+    bodyFormData.append('phone', newData.phone);
+
+    fetch(url, {
+      method: 'POST',
+      body: bodyFormData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw new Error('HTTP Error: ' + response.status);
+        }
+      })
+      .then((data) => {
+        console.log('Request successful! Response: ' + data);
+      })
+      .catch((error) => {
+        console.log('An error occurred: ' + error.message);
+      });
+  };
+
   return (
     <>
       {open ? (
@@ -104,8 +132,7 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
             <div className="flex justify-center gap-3">
               <button
                 onClick={() => {
-                  setOpen(!open);
-                  setResOpen(!resOpen);
+                  saveResult();
                 }}
                 className="mt-4 bg-primary text-white font-medium py-2 rounded-[28px] px-5">
                 Ха
@@ -154,7 +181,9 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
                               handleAnswerSelect(index + (currentPage - 1) * TestsPerPage, option)
                             }
                           />
-                          <label className="cursor-pointer w-[80%] text-left " htmlFor={option + optionIndex}>
+                          <label
+                            className="cursor-pointer w-[80%] text-left "
+                            htmlFor={option + optionIndex}>
                             {option}
                           </label>
                         </li>

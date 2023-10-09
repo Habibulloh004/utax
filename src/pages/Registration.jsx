@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MyContext } from '../MyContext';
 import { img } from '../png';
 
-const Registration = ({correctCount, setUserData,userData}) => {
-  const api = 'https://utax-777597cb6d80.herokuapp.com/add_question';
+const Registration = () => {
+  const { userData, setUserData } = useContext(MyContext);
+  // const api = 'https://utax-777597cb6d80.herokuapp.com/add_question';
   const { register } = img;
 
   const [formData, setFormData] = useState({
-    firstName: '',
+    name: '',
     lastName: '',
-    phoneNumber: '',
+    comment: '',
+    phone: '',
   });
 
   const handleInputChange = (e) => {
@@ -19,35 +22,19 @@ const Registration = ({correctCount, setUserData,userData}) => {
       [name]: value,
     });
   };
-
-
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(userData,'keldi')
 
-    // Create an object containing the form data
-    setUserData({
-      first_name: formData.firstName,
-      last_name: formData.lastName,
-      phone_number: formData.phoneNumber,
-    }) 
-
-    // fetch(api, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(userData),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log('Response from the server:', data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error sending POST request:', error);
-    //   });
+    setUserData([formData.name, formData.lastName, formData.comment, formData.phone]);
+    let localObj = {
+      name: formData.name + ' ' + formData.lastName,
+      phone: formData.phone,
+    };
+    localStorage.setItem('localObj', JSON.stringify(localObj));
+    // const data = JSON.parse(localStorage.getItem('localObj'));
   };
+  const isFormValid = formData.name !== '' && formData.lastName !== '' && formData.phone !== '';
 
   return (
     <main className="mt-16 flex items-center justify-center text-primary">
@@ -65,8 +52,7 @@ const Registration = ({correctCount, setUserData,userData}) => {
               className="px-4 py-1 rounded-[28px] w-3/5 bg-colorFoot text-primary"
               type="text"
               id="firstName"
-              name="firstName"
-              value={formData.firstName}
+              name="name"
             />
           </li>
           <li className="flex gap-3 justify-end items-center">
@@ -78,7 +64,6 @@ const Registration = ({correctCount, setUserData,userData}) => {
               type="text"
               id="lastName"
               name="lastName"
-              value={formData.lastName}
             />
           </li>
           <li className="flex gap-3 justify-end items-center">
@@ -89,15 +74,16 @@ const Registration = ({correctCount, setUserData,userData}) => {
               className="p-4 py-1 rounded-[28px] w-3/5 bg-colorFoot text-primary"
               type="number"
               id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
+              name="phone"
             />
           </li>
         </ul>
         <button
           type="submit"
+          onClick={(e) => handleSubmit(e)}
           className="cursor-pointer mt-8 bg-primary text-white1 p-2 rounded-[28px]  w-2/3">
-          <Link to="/rules">Рўйхатдан ўтиш</Link>
+          {isFormValid ? <Link to="/rules">Рўйхатдан ўтиш</Link> : <>Рўйхатдан ўтиш</>}
+          
         </button>
       </form>
     </main>
