@@ -13,8 +13,7 @@ import { useState } from 'react';
 
 function App() {
   const [correctCount, setCorrectCount] = useState(0);
-  const userData = {};
-  console.log(userData);
+  const [userData, setUserData] = useState()
 
   return (
     <main className='flex flex-col justify-between h-screen'>
@@ -23,7 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/about" element={<About />} />
-          <Route path="/registration" element={<Registration correctCount={correctCount} userData={userData} />} />
+          <Route path="/registration" element={<Registration correctCount={correctCount} setUserData={setUserData} userData={userData} />} />
           <Route path="/rules" element={<Rules />} />
           <Route path="/test" element={<Test correctCount={correctCount} setCorrectCount={setCorrectCount} userData={userData} />} />
           <Route path="/reg" element={<Reg />} />

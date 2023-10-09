@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { img } from '../png';
 
-const Registration = ({correctCount, userData}) => {
+const Registration = ({correctCount, setUserData,userData}) => {
   const api = 'https://utax-777597cb6d80.herokuapp.com/add_question';
   const { register } = img;
 
@@ -20,16 +20,19 @@ const Registration = ({correctCount, userData}) => {
     });
   };
 
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(userData,'keldi')
 
     // Create an object containing the form data
-    userData = {
+    setUserData({
       first_name: formData.firstName,
       last_name: formData.lastName,
       phone_number: formData.phoneNumber,
-    };
-    console.log(userData);
+    }) 
+
     // fetch(api, {
     //   method: 'POST',
     //   headers: {

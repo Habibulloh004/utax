@@ -86,15 +86,9 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
     );
   }
   if (handleSubmit) {
-    const exportObj = [
-      { 
-        id: 1,
-        correctCount: correctCount,
-      }, {
-        id: 2,
-        userData: userData,
-      }
-    ]
+    const exportObj = {
+      ...userData, count: correctCount
+    }
     localStorage.setItem('obj', JSON.stringify(exportObj));
   }
   
@@ -147,9 +141,9 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
                   <form className="form_radio w-10/12 mx-auto mt-4">
                     <ul className="flex flex-col gap-2">
                       {question.options.map((option, optionIndex) => (
-                        <li className="flex items-center gap-2" key={optionIndex}>
+                        <li className="flex gap-2 items-center" key={optionIndex}>
                           <input
-                            className="accent-primary"
+                            className="accent-primary w-1/3"
                             type="radio"
                             value={option}
                             id={option + optionIndex}
@@ -160,7 +154,7 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
                               handleAnswerSelect(index + (currentPage - 1) * TestsPerPage, option)
                             }
                           />
-                          <label className="cursor-pointer" htmlFor={option + optionIndex}>
+                          <label className="cursor-pointer w-1/3" htmlFor={option + optionIndex}>
                             {option}
                           </label>
                         </li>
