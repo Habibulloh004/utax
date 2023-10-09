@@ -134,16 +134,16 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
             {data
               .slice((currentPage - 1) * TestsPerPage, currentPage * TestsPerPage)
               .map((question, index) => (
-                <article key={index} className="mt-5 bg-gray1 rounded-2xl py-6 px-6">
+                <article key={index} className="mt-5 bg-gray1 rounded-2xl py-6 px-4">
                   <p>
                     {index + 1 + (currentPage - 1) * TestsPerPage}. {question.question}
                   </p>
-                  <form className="form_radio w-10/12 mx-auto mt-4">
+                  <form className="form_radio w-11/12 mx-auto mt-4">
                     <ul className="flex flex-col gap-2">
                       {question.options.map((option, optionIndex) => (
-                        <li className="flex gap-2 items-center" key={optionIndex}>
+                        <li className="flex gap-2 items-center w-full" key={optionIndex}>
                           <input
-                            className="accent-primary w-1/3"
+                            className="accent-primary w-[15%] "
                             type="radio"
                             value={option}
                             id={option + optionIndex}
@@ -154,7 +154,7 @@ const Test = ({correctCount, setCorrectCount, userData}) => {
                               handleAnswerSelect(index + (currentPage - 1) * TestsPerPage, option)
                             }
                           />
-                          <label className="cursor-pointer w-1/3" htmlFor={option + optionIndex}>
+                          <label className="cursor-pointer w-2/3 text-left " htmlFor={option + optionIndex}>
                             {option}
                           </label>
                         </li>
