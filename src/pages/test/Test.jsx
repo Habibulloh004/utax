@@ -42,7 +42,7 @@ const Test = ({ correctCount, setCorrectCount }) => {
     setResOpen(!resOpen);
   };
 
-  const totalPages = Math.ceil(data.length / TestsPerPage);
+  const totalPages = Math.ceil(data.length / TestsPerPage); //СОЛИҚ ИШИ
 
   useEffect(() => {
     fetch(api)
@@ -53,17 +53,31 @@ const Test = ({ correctCount, setCorrectCount }) => {
           (question) => question.title === 'СОЛИҚ ИШИ',
         );
 
-        const getRandomQuestions = (questions, count) => {
-          return questions.sort(() => 0.5 - Math.random()).slice(0, count);
+        const getRandomQuestions = (questions, difficultyCounts) => {
+          const selectedQuestions = [];
+
+          Object.keys(difficultyCounts).forEach((difficulty) => {
+            const count = difficultyCounts[difficulty];
+            const filteredQuestions = questions.filter(
+              (question) => question.difficulty === parseInt(difficulty, 10),
+            );
+            selectedQuestions.push(...filteredQuestions.slice(0, count));
+          });
+
+          return selectedQuestions.sort(() => 0.5 - Math.random());
         };
 
-        const title1SelectedQuestions = getRandomQuestions(title1Questions, 25);
-        const title2SelectedQuestions = getRandomQuestions(title2Questions, 25);
+        const title1DifficultyCounts = { 1: 8, 2: 9, 3: 8 }; // Define difficulty counts for Title 1
+        const title2DifficultyCounts = { 1: 8, 2: 9, 3: 8 }; // Define difficulty counts for Title 2
+
+        const title1SelectedQuestions = getRandomQuestions(title1Questions, title1DifficultyCounts);
+        const title2SelectedQuestions = getRandomQuestions(title2Questions, title2DifficultyCounts);
 
         const selectedQuestions = [...title1SelectedQuestions, ...title2SelectedQuestions];
 
         setData(selectedQuestions);
         setUserAnswers(Array(selectedQuestions.length).fill(null));
+        console.log(data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
