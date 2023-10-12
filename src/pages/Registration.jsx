@@ -4,8 +4,7 @@ import { MyContext } from '../MyContext';
 import { img } from '../png';
 
 const Registration = () => {
-  const { userData, setUserData } = useContext(MyContext);
-  // const api = 'https://utax-777597cb6d80.herokuapp.com/add_question';
+  const { setUserData } = useContext(MyContext);
   const { register } = img;
 
   const [formData, setFormData] = useState({
@@ -22,10 +21,9 @@ const Registration = () => {
       [name]: value,
     });
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
     setUserData([formData.name, formData.lastName, formData.comment, formData.phone]);
     let localObj = {
       name: formData.name + ' ' + formData.lastName,
@@ -81,9 +79,8 @@ const Registration = () => {
         <button
           type="submit"
           onClick={(e) => handleSubmit(e)}
-          className="cursor-pointer mt-8 bg-primary text-white1 p-2 rounded-[28px]  w-2/3">
-          {isFormValid ? <Link to="/rules">Рўйхатдан ўтиш</Link> : <>Рўйхатдан ўтиш</>}
-          
+          className="cursor-pointer mt-8 bg-primary text-white1 rounded-[28px] h-10 w-40">
+          {isFormValid ? <Link to="/rules" className=' w-full h-full p-3'>Рўйхатдан ўтиш</Link> : <p className=''>Рўйхатдан ўтиш</p>}
         </button>
       </form>
     </main>
@@ -91,67 +88,3 @@ const Registration = () => {
 };
 
 export default Registration;
-
-// import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { img } from '../png';
-
-// const Registration = () => {
-//   const api = 'https://utax-777597cb6d80.herokuapp.com/create_user';
-//   const { register } = img;
-
-//   return (
-//     <main className="mt-16 flex items-center justify-center text-primary">
-//       <form className="w-full flex flex-col items-center justify-center">
-//         <article className="flex items-center justify-center pr-2">
-//           <img className="w-16" src={register} alt="" />
-//           <p className="text-lg">Рўйхатдан ўтиш</p>
-//         </article>
-//         <ul className="flex flex-col justify-center gap-5 mt-6">
-//           <li className="flex gap-3 justify-end items-center">
-//             <label htmlFor="name">Исм</label>
-//             <input
-//               required
-//               className="px-4 py-1 rounded-[28px] w-3/5 bg-colorFoot"
-//               type="text"
-//               id="fName"
-//             />
-//           </li>
-//           <li className="flex gap-3 justify-end items-center">
-//             <label htmlFor="lName">Фамилия</label>
-//             <input
-//               required
-//               className="p-4 py-1 rounded-[28px] w-3/5 bg-colorFoot"
-//               type="text"
-//               id="fName"
-//             />
-//           </li>
-//           <li className="flex gap-3 justify-end items-center">
-//             <label htmlFor="number">Тел. Рақами</label>
-//             <input
-//               required
-//               className="p-4 py-1 rounded-[28px] w-3/5 bg-colorFoot"
-//               type="number"
-//               id="number"
-//             />
-//           </li>
-//         </ul>
-//         <button
-//           type="submit"
-//           className="cursor-pointer mt-8 bg-primary text-white1 p-2 rounded-[28px]  w-2/3">
-//           {/* {formData === '' ? (
-//             'Рўйхатдан ўтиш'
-//           ) : (
-//             <Link to="/rules" className="w-full flex justify-center">
-//             </Link>
-//           )} */}
-//           <Link to="/rules">
-//             Рўйхатдан ўтиш
-//           </Link>
-//         </button>
-//       </form>
-//     </main>
-//   );
-// };
-
-// export default Registration;

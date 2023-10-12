@@ -49,21 +49,47 @@ const Test = ({ correctCount, setCorrectCount }) => {
       .then((response) => response.json())
       .then((d) => {
         const title1Questions = d.questions.filter((question) => question.title === 'БУХГАЛТЕРИЯ');
-        const title2Questions = d.questions.filter(
-          (question) => question.title === 'СОЛИҚ ИШИ',
-        );
+        const title2Questions = d.questions.filter((question) => question.title === 'СОЛИҚ ИШИ');
 
-        const getRandomQuestions = (questions, count) => {
-          return questions.sort(() => 0.5 - Math.random()).slice(0, count);
+        const difficultyRanges = {
+          1: [1, 8],
+          2: [2, 9],
+          3: [3, 8],
         };
 
-        const title1SelectedQuestions = getRandomQuestions(title1Questions, 25);
-        const title2SelectedQuestions = getRandomQuestions(title2Questions, 25);
+        const getRandomQuestions = (questions, difficulty, count) => {
+          const [start, end] = difficultyRanges[difficulty];
+          return questions
+            .filter((question) => question.difficulty === difficulty)
+            .slice(start - 1, end)
+            .sort(() => 0.5 - Math.random())
+            .slice(0, count);
+        };
+
+        const title1DifficultyCounts = { 1: 8, 2: 8, 3: 8 };
+        const title2DifficultyCounts = { 1: 8, 2: 8, 3: 8 };
+
+        const title1SelectedQuestions = [];
+        const title2SelectedQuestions = [];
+
+        // Function to populate the selected questions
+        const populateSelectedQuestions = (questions, difficultyCounts, selectedQuestions) => {
+          Object.keys(difficultyCounts).forEach((difficulty) => {
+            const count = difficultyCounts[difficulty];
+            selectedQuestions.push(...getRandomQuestions(questions, difficulty, count));
+          });
+        };
+
+        // Populate title1SelectedQuestions and title2SelectedQuestions
+        populateSelectedQuestions(title1Questions, title1DifficultyCounts, title1SelectedQuestions);
+        populateSelectedQuestions(title2Questions, title2DifficultyCounts, title2SelectedQuestions);
 
         const selectedQuestions = [...title1SelectedQuestions, ...title2SelectedQuestions];
 
-        setData(selectedQuestions);
-        setUserAnswers(Array(selectedQuestions.length).fill(null));
+        const shuffledQuestions = selectedQuestions.sort(() => 0.5 - Math.random()).slice(0, 50);
+
+        setData(shuffledQuestions);
+        setUserAnswers(Array(shuffledQuestions.length).fill(null));
       })
       .catch((error) => {
         console.error('Error fetching data:', error);

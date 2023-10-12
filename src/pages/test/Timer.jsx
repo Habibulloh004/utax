@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { MyContext } from '../../MyContext';
 
 const Timer = ({ setOpen, remainingTime }) => {
+  const { setResOpen } = useContext(MyContext)
   const totalSeconds = remainingTime || 100 * 60; // 100 minutes
   const [hours, setHours] = useState(1);
   const [minutes, setMinutes] = useState(40);
@@ -19,9 +21,8 @@ const Timer = ({ setOpen, remainingTime }) => {
 
     const timer = setInterval(() => {
       if (hours === 0 && minutes === 0 && seconds === 0) {
-        setOpen(false);
+        setResOpen(true);
         clearInterval(timer);
-        // Timer has reached 0, handle what happens next (e.g., submit answers).
       } else {
         if (minutes === 0 && seconds === 0) {
           setHours((prevHours) => prevHours - 1);

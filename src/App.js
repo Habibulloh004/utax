@@ -6,16 +6,13 @@ import Footer from './components/Footer';
 import Registration from './pages/Registration';
 import Rules from './pages/Rules';
 import Test from './pages/test/Test';
-import Reg from './pages/Reg';
 import Admin from './pages/Admin';
 import { useState } from 'react';
-import { useEffect } from 'react';
-import axios from 'axios';
 // import AdminTest from './pages/AdminTest';
 
 function App() {
   const [correctCount, setCorrectCount] = useState(0);
-  
+  localStorage.setItem('check', 'false');
 
   return (
     <main className="flex flex-col justify-between h-screen">
@@ -30,7 +27,6 @@ function App() {
             path="/test"
             element={<Test correctCount={correctCount} setCorrectCount={setCorrectCount} />}
           />
-          <Route path="/reg" element={<Reg />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </section>
