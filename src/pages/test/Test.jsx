@@ -38,7 +38,6 @@ const Test = ({ correctCount, setCorrectCount }) => {
   };
 
   const resOpenFunction = () => {
-    localStorage.removeItem('remainingTime');
     setResOpen(!resOpen);
   };
 
@@ -74,7 +73,6 @@ const Test = ({ correctCount, setCorrectCount }) => {
 
         setData(selectedQuestions);
         setUserAnswers(Array(selectedQuestions.length).fill(null));
-        console.log(selectedQuestions);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
