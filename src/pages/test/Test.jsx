@@ -49,35 +49,32 @@ const Test = ({ correctCount, setCorrectCount }) => {
       .then((response) => response.json())
       .then((d) => {
         const title1Questions = d.questions.filter((question) => question.title === 'БУХГАЛТЕРИЯ');
-        const title2Questions = d.questions.filter(
-          (question) => question.title === 'СОЛИҚ ИШИ',
-        );
+        const title2Questions = d.questions.filter((question) => question.title === 'СОЛИҚ ИШИ');
 
-        const getRandomQuestions = (questions, difficultyCounts) => {
-          const selectedQuestions = [];
-
-          Object.keys(difficultyCounts).forEach((difficulty) => {
-            const count = difficultyCounts[difficulty];
-            const filteredQuestions = questions.filter(
-              (question) => question.difficulty === parseInt(difficulty, 10),
-            );
-            selectedQuestions.push(...filteredQuestions.slice(0, count));
-          });
-
-          return selectedQuestions.sort(() => 0.5 - Math.random());
+        const getRandomQuestions = (questions, difficulty, count) => {
+          const filteredQuestions = questions.filter(
+            (question) => question.difficulty === difficulty,
+          );
+          return filteredQuestions.sort(() => 0.5 - Math.random()).slice(0, count);
         };
 
-        const title1DifficultyCounts = { 1: 8, 2: 9, 3: 8 }; // Define difficulty counts for Title 1
-        const title2DifficultyCounts = { 1: 8, 2: 9, 3: 8 }; // Define difficulty counts for Title 2
+        const title1SelectedQuestions = [
+          ...getRandomQuestions(title1Questions, 1, 8),
+          ...getRandomQuestions(title1Questions, 2, 9),
+          ...getRandomQuestions(title1Questions, 3, 8),
+        ];
 
-        const title1SelectedQuestions = getRandomQuestions(title1Questions, title1DifficultyCounts);
-        const title2SelectedQuestions = getRandomQuestions(title2Questions, title2DifficultyCounts);
+        const title2SelectedQuestions = [
+          ...getRandomQuestions(title2Questions, 1, 8),
+          ...getRandomQuestions(title2Questions, 2, 9),
+          ...getRandomQuestions(title2Questions, 3, 8),
+        ];
 
         const selectedQuestions = [...title1SelectedQuestions, ...title2SelectedQuestions];
 
         setData(selectedQuestions);
         setUserAnswers(Array(selectedQuestions.length).fill(null));
-        console.log(data);
+        console.log(selectedQuestions);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
