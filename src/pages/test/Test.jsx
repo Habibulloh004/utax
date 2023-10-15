@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom';
 import { MyContext } from '../../MyContext';
 import { img } from '../../png';
 import Timer from './Timer';
-import TimerEx from './TimerEx';
 
 const Test = ({ correctCount, setCorrectCount }) => {
-  const { see, setSee, open, setOpen, resOpen, setResOpen } = useContext(MyContext);
+  const { open, setOpen, resOpen, setResOpen } = useContext(MyContext);
   const { next, prev } = img;
   const [currentPage, setCurrentPage] = useState(1);
   const [incorrectCount, setIncorrectCount] = useState(0);
@@ -41,7 +40,7 @@ const Test = ({ correctCount, setCorrectCount }) => {
     setResOpen(!resOpen);
   };
 
-  const totalPages = Math.ceil(data.length / TestsPerPage); //СОЛИҚ ИШИ
+  const totalPages = Math.ceil(data.length / TestsPerPage);
 
   useEffect(() => {
     fetch(api)
@@ -147,124 +146,116 @@ const Test = ({ correctCount, setCorrectCount }) => {
 
   return (
     <>
-      {open ? (
-        <div className="fixed inset-0 flex items-center justify-center z-10">
-          <div className="bg-colorFoot p-8 w-10/12 rounded shadow-lg text-primary">
-            <p className="text-xl font-semibold mb-4 text-center">
-              Тест синовини якунламоқчимисиз?
-            </p>
-
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => {
-                  saveResult();
-                }}
-                className="mt-4 bg-primary text-white font-medium py-2 rounded-[28px] px-5">
-                Ха
-              </button>
-              <button
-                onClick={() => setOpen(!open)}
-                className="mt-4 bg-primary text-white font-medium py-2 px-4  rounded-[28px]">
-                Йук
-              </button>
-            </div>
+      <div className={`fixed inset-0 ${open ? 'flex' : 'hidden'} items-center justify-center z-10`}>
+        <div className="bg-colorFoot p-8 w-10/12 rounded shadow-lg text-primary">
+          <p className="text-xl font-semibold mb-4 text-center">Тест синовини якунламоқчимисиз?</p>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => {
+                saveResult();
+              }}
+              className="mt-4 bg-primary text-white font-medium py-2 rounded-[28px] px-5">
+              Ха
+            </button>
+            <button
+              onClick={() => setOpen(!open)}
+              className="mt-4 bg-primary text-white font-medium py-2 px-4  rounded-[28px]">
+              Йук
+            </button>
           </div>
         </div>
-      ) : (
-        <main className="mt-6 text-primary">
-          <article className="flex justify-between items-center">
-            <p className="font-semibold text-4xl">Тест</p>
-            <div className="flex flex-col justify-center items-end text-lg">
-              <Timer open={open} setOpen={setOpen} />
-              {/* <TimerEx /> */}
-              <p className="text-sm">
-                {(currentPage - 1) * TestsPerPage + 1}-
-                {Math.min(currentPage * TestsPerPage, data.length)}/{data.length}
-              </p>
+      </div>
+      <main className={`mt-6 text-primary ${!open ? 'block' : 'hidden'}`}>
+        <article className="flex justify-between items-center">
+          <p className="font-semibold text-4xl">Тест</p>
+          <div className="flex flex-col justify-center items-end text-lg">
+            <Timer open={open} setOpen={setOpen} />
+            {/* <TimerEx /> */}
+            <p className="text-sm">
+              {(currentPage - 1) * TestsPerPage + 1}-
+              {Math.min(currentPage * TestsPerPage, data.length)}/{data.length}
+            </p>
+          </div>
+        </article>
+        <section>
+          {data &&
+            data.length > 0 &&
+            data
+              .slice((currentPage - 1) * TestsPerPage, currentPage * TestsPerPage)
+              .map((question, index) => (
+                <article key={index} className="mt-5 bg-gray1 rounded-2xl py-6 px-4">
+                  <p>
+                    {index + 1 + (currentPage - 1) * TestsPerPage}. {question.question}
+                  </p>
+                  <form className="form_radio w-11/12 mx-auto mt-4">
+                    <ul className="flex flex-col gap-2">
+                      {question.options.map((option, optionIndex) => (
+                        <li className="flex gap-2 items-center w-full" key={optionIndex}>
+                          <input
+                            className="accent-primary w-[10%] "
+                            type="radio"
+                            value={option}
+                            id={option + optionIndex}
+                            checked={
+                              userAnswers[index + (currentPage - 1) * TestsPerPage] === option
+                            }
+                            onChange={() =>
+                              handleAnswerSelect(index + (currentPage - 1) * TestsPerPage, option)
+                            }
+                          />
+                          <label
+                            className="cursor-pointer w-[80%] text-left "
+                            htmlFor={option + optionIndex}>
+                            {option}
+                          </label>
+                        </li>
+                      ))}
+                    </ul>
+                  </form>
+                </article>
+              ))}
+          <article className="mt-6 flex flex-col gap-2 items-center">
+            <ul className="flex gap-3">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <li
+                  className={`cursor-pointer ${
+                    currentPage === index + 1 ? 'font-bold' : 'font-normal'
+                  }`}
+                  key={index}
+                  onClick={() => {
+                    setCurrentPage(index + 1);
+                    window.scrollTo(0, 0);
+                  }}>
+                  {currentPage === index + 1 ? index + 1 : index + 1}
+                </li>
+              ))}
+            </ul>
+            <div className="flex gap-5">
+              <img
+                className="cursor-pointer bg-gray1 px-5 py-2 rounded-2xl"
+                src={prev}
+                alt=""
+                onClick={() => {
+                  currentPage > 1 && setCurrentPage(currentPage - 1);
+                  window.scrollTo(0, 0);
+                }}
+              />
+              <img
+                className="cursor-pointer bg-gray1 px-5 py-2 rounded-2xl"
+                src={next}
+                alt=""
+                onClick={() => {
+                  currentPage < totalPages && setCurrentPage(currentPage + 1);
+                  window.scrollTo(0, 0);
+                }}
+              />
             </div>
+            <button onClick={handleSubmit} className="bg-gray1 px-5 py-1 rounded-2xl font-semibold">
+              Якунлаш
+            </button>
           </article>
-          <section>
-            {data &&
-              data.length > 0 &&
-              data
-                .slice((currentPage - 1) * TestsPerPage, currentPage * TestsPerPage)
-                .map((question, index) => (
-                  <article key={index} className="mt-5 bg-gray1 rounded-2xl py-6 px-4">
-                    <p>
-                      {index + 1 + (currentPage - 1) * TestsPerPage}. {question.question}
-                    </p>
-                    <form className="form_radio w-11/12 mx-auto mt-4">
-                      <ul className="flex flex-col gap-2">
-                        {question.options.map((option, optionIndex) => (
-                          <li className="flex gap-2 items-center w-full" key={optionIndex}>
-                            <input
-                              className="accent-primary w-[10%] "
-                              type="radio"
-                              value={option}
-                              id={option + optionIndex}
-                              checked={
-                                userAnswers[index + (currentPage - 1) * TestsPerPage] === option
-                              }
-                              onChange={() =>
-                                handleAnswerSelect(index + (currentPage - 1) * TestsPerPage, option)
-                              }
-                            />
-                            <label
-                              className="cursor-pointer w-[80%] text-left "
-                              htmlFor={option + optionIndex}>
-                              {option}
-                            </label>
-                          </li>
-                        ))}
-                      </ul>
-                    </form>
-                  </article>
-                ))}
-            <article className="mt-6 flex flex-col gap-2 items-center">
-              <ul className="flex gap-3">
-                {Array.from({ length: totalPages }).map((_, index) => (
-                  <li
-                    className={`cursor-pointer ${
-                      currentPage === index + 1 ? 'font-bold' : 'font-normal'
-                    }`}
-                    key={index}
-                    onClick={() => {
-                      setCurrentPage(index + 1);
-                      window.scrollTo(0, 0);
-                    }}>
-                    {currentPage === index + 1 ? index + 1 : index + 1}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex gap-5">
-                <img
-                  className="cursor-pointer bg-gray1 px-5 py-2 rounded-2xl"
-                  src={prev}
-                  alt=""
-                  onClick={() => {
-                    currentPage > 1 && setCurrentPage(currentPage - 1);
-                    window.scrollTo(0, 0);
-                  }}
-                />
-                <img
-                  className="cursor-pointer bg-gray1 px-5 py-2 rounded-2xl"
-                  src={next}
-                  alt=""
-                  onClick={() => {
-                    currentPage < totalPages && setCurrentPage(currentPage + 1);
-                    window.scrollTo(0, 0);
-                  }}
-                />
-              </div>
-              <button
-                onClick={handleSubmit}
-                className="bg-gray1 px-5 py-1 rounded-2xl font-semibold">
-                Якунлаш
-              </button>
-            </article>
-          </section>
-        </main>
-      )}
+        </section>
+      </main>
     </>
   );
 };
